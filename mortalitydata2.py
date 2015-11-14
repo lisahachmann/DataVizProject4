@@ -9,27 +9,69 @@ cur = conn.cursor()
 #cur.execute("SELECT cause_Recode_39 FROM mortality WHERE sex = 'F'")
 #cur.execute("SELECT * FROM sqlite_master WHERE name='mortality'")
 #cur.execute("SELECT 'Age_Value text' FROM 'mortality' WHERE sex = 'M' OR sex = 'F'")
-cur.execute("SELECT * FROM mortality WHERE sex = 'F'")
+#cur.execute("SELECT * FROM mortality WHERE sex = 'F'")
 #print cur.fetchone()
 
 
-causeDict = {}
-for i in range(10):
-    data = cur.fetchone()
-    if int(data[25]) not in causeDict:
-        causeDict[int(data[25])] = [int(data[5])]
-    else:
-        causeDict[int(data[25])].append(int(data[5]))
-    
-#print causeDict
-
-causeAvgDict = {}
-for key,value in causeDict.iteritems():
-    if key not in causeAvgDict:
-        causeAvgDict[key] = sum(value)/len(value)
-
-print causeAvgDict
+#For each cause of death in the Cause_Recode_39 column, the average age of the persons that died from that cause, for each year.
+#age = data[5], cause = data[25]
+def p1():
+    causeDict = {}
+    for i in range(10):
+        data = cur.fetchone()
+        if int(data[25]) not in causeDict:
+            causeDict[int(data[25])] = [int(data[5])]
+        else:
+            causeDict[int(data[25])].append(int(data[5]))
         
+    print causeDict
+    
+    causeAvgDict = {}
+    for key,value in causeDict.iteritems():
+        if key not in causeAvgDict:
+            causeAvgDict[key] = sum(value)/len(value)
+    
+    return causeAvgDict
+
+#p1()
+
+
+#For each age, the top cause of death (as per the Cause_Record_39) for deaths at that age, for each year.
+        
+from collections import Counter
+
+def Most_Common(lst):
+    data = Counter(lst)
+    return data.most_common(1)[0][0]
+
+
+topDeathYear = {}
+
+def p2(year):
+    cur.execute("SELECT * FROM mortality WHERE year = " + year)
+    death = {}
+    topDeath = {}
+    
+    for i in range(100):
+        data = cur.fetchone()
+        if int(data[5]) not in death:
+            death[int(data[5])] = [int(data[25])]
+        else:
+            death[int(data[5])].append(int(data[25]))
+    
+    for key,value in death.iteritems():
+        if key not in topDeath:
+            topDeath[key] = Most_Common(value)
+            
+    return topDeath
+
+topDeathYear['2003'] = p2('2003')
+topDeathYear['2008'] = p2('2008')
+topDeathYear['2013'] = p2('2013')
+
+print topDeathYear
+
+
 
 
 

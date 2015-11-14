@@ -7,7 +7,7 @@ from bottle import route, run, template
 
 @route('/mortality')
 def death_list():
-    conn = sqlite3.connect('/home/li/GitRepos/DataVizProject4/mortality.db')
+    conn = sqlite3.connect('C:\Users\jmorris\Documents\Fall_2015\Data Visualization\HW4\mortality.db')
     c = conn.cursor()
     c.execute("SELECT * FROM mortality where sex = 'F'")#("SELECT  cause_Recode_39 FROM mortality WHERE sex = 'F'")
     causeDict = {}
@@ -22,7 +22,7 @@ def death_list():
     for key,value in causeDict.iteritems():
         if key not in causeAvgDict:
             causeAvgDict[key] = sum(value)/len(value)
-    with open('/home/li/GitRepos/DataVizProject4/data.json', 'w') as outfile:
+    with open('C:\Users\jmorris\Documents\Fall_2015\Data Visualization\HW4\data.json', 'w') as outfile:
         json.dump(causeAvgDict, outfile)
     return causeAvgDict
 run(host='localhost', port=8081, debug=True)
