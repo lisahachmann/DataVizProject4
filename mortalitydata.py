@@ -22,7 +22,7 @@ def death_list():
     for key,value in causeDict.iteritems():
         if key not in causeAvgDict:
             causeAvgDict[key] = sum(value)/len(value)
-    with open('/home/li/GitRepos/DataVizProject4/data.json', 'w') as outfile:
+    with open('/home/li/GitRepos/DataVizProject4/averageage.json', 'w') as outfile:
         json.dump(causeAvgDict, outfile, indent = 4)
     return causeAvgDict
 run(host='localhost', port=8081, debug=True)
