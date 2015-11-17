@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Social Media Data Charts</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <style>
+
+    .container {
+      float: left;
+    }
+        </style> -->
+</head>
+<body>
+  <body>
+    <h1 align="center">Mortality Statistics</h1>
+    <div style="text-align:center;"><svg  class = "container" id = "gender" height = "500" width = "700" style="border: 1px solid grey" style="float: left"</svg></div>
+    <h3 align= "center">Gender Distribution</h3>
+    <div style="text-align:center;"><svg class = "container" id = "marital" height = "500" width = "700" style="border: 1px solid grey"</svg></div>
+    <h3 align= "center">Marital Status Distribution</h3>
+    <div style="text-align:center;"> <svg class = "container" id = "age" height = "500" width = "700" style="border: 1px solid grey" </svg></div>
+    <h3 align= "center">Age at Death Distribution</h3>
+
+    <script type="text/javascript">
+      var Gsvg = d3.select("#gender");
+      var Gheight = Gsvg.attr("height");
+      var gGidth = Gsvg.attr("width");
+      var Msvg = d3.select("#marital");
+      var Mheight = Msvg.attr("height");
+      var Mwidth = Msvg.attr("width");
+      var Asvg = d3.select("#age");
+      var Aheight = Asvg.attr("height");
+      var Awidth = Asvg.attr("width");
+
+      var GLOBAL = {genderdata: [], maritaldata: [], causedata: []};//, ages: {}};
+      window.addEventListener("load", run);
+
+      function run () {
+          d3.json("/home/li/GitRepos/DataVizProject4/SexMarriageAge.json", function(data1) {
+              console.log(data1) //Log output to console
+              GLOBAL.dataset = data1;
+          });
+          draw();
+    }
+
+    function draw(){
+        var data = [ 5, 10, 15, 20, 25 ];
+        var circles = Msvg.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle");
+
+        circles.attr("cx", function(d, i) {
+        return (i * 50) + 25;})
+        .attr("cy", Mheight/2)
+        .attr("r", function(d) {
+            return d;})
+        .attr("fill", "yellow")
+        .attr("stroke", "orange")
+        .attr("stroke-width", function(d) {
+            return d/2;});
+
+        var data1 = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+        var bars = Gsvg.selectAll("rect")
+        .data(data1)
+        .enter()
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 20)
+        .attr("height", 100);
+        }
+
+        // data2 = [1,2,3,4,5];
+        // data3 = [1,2,3,4,5];
+        // var x = d3.time.scale().range([0, Awidth]);
+        // var y = d3.scale.linear().range([Aheight, 0]);
+        // var line = d3.svg.line()
+        // .x(function(d) { return x(d.data2); })
+        // .y(function(d) { return y(d.data3); });
+        // var lines = Asvg.append("line")
+        //                  .attr(x)
+        //                  .attr(y);
+        //
+        // var array = [1,2,3,4,5,6]
+        // var line = d3.svg.line()
+        //     .x(function(d) { return Math.random() * 1000 })
+        //     .y(function(d) { return Math.random() * 1000});
+        //
+        // <!-- Adding to the svg -->
+        // .append('path')
+        // .attr('d', line(array))
+        //http://stackoverflow.com/questions/13570048/drawing-simple-lines-with-d3js
+        
+    </script>
+  </body>
+</html>
