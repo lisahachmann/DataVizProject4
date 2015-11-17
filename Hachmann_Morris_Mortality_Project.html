@@ -16,13 +16,45 @@
   <body>
     <h1 align="center">Mortality Statistics</h1>
     <div style="text-align:center;"><svg  class = "container" id = "gender" height = "500" width = "700" style="border: 1px solid grey" style="float: left"</svg></div>
+    <h3 align= "center">Gender Distribution</h3>
     <div style="text-align:center;"><svg class = "container" id = "marital" height = "500" width = "700" style="border: 1px solid grey"</svg></div>
+    <h3 align= "center">Marital Status Distribution</h3>
     <div style="text-align:center;"> <svg class = "container" id = "activity" height = "500" width = "700" style="border: 1px solid grey" </svg></div>
+    <h3 align= "center">Cause of Death Distribution</h3>
 
     <script type="text/javascript">
+      var Gsvg = d3.select("#gender");
+      var Gheight = Gsvg.attr("height");
+      var gGidth = Gsvg.attr("width");
+      var Msvg = d3.select("#marital");
+      var Gheight = Msvg.attr("height");
+      var Gwidth = Msvg.attr("width");
+
+      var GLOBAL = {genderdata: [], maritaldata: [], causedata: []};//, ages: {}};
       window.addEventListener("load", run);
 
       function run () {
+          d3.json("/home/li/GitRepos/DataVizProject4/topcauses.json", function(data1) {
+              console.log(data1) //Log output to console
+              GLOBAL.causedata = data1;
+          });
+          d3.json("/home/li/GitRepos/DataVizProject4/maritaldata.json", function(data2) {
+              console.log(data2) //Log output to console
+              GLOBAL.maritaldata = data2;
+          });
+          d3.json("/home/li/GitRepos/DataVizProject4/genderdata.json", function(data3) {
+              console.log(data3) //Log output to console
+              GLOBAL.genderdata = data3;
+          });
+          draw()
+    }
+
+    function draw(){
+        var dataset = [ 5, 10, 15, 20, 25 ];
+        var circles = Msvg.selectAll("circle")
+        .data(dataset)
+        .enter()
+        .append("circle");
     }
     </script>
   </body>
