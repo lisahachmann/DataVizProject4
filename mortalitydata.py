@@ -7,9 +7,9 @@ from bottle import route, run, template
 
 @route('/mortality')
 def death_list():
-    conn = sqlite3.connect('C:\Users\jmorris\Documents\Fall_2015\Data Visualization\HW4\mortality.db')
+    conn = sqlite3.connect('mortality.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM mortality where sex = 'F' OR sex = 'M'")
+    c.execute("SELECT * FROM mortality WHERE sex = 'F'")
     causeDict = {}
     for i in range(100):
         data = c.fetchone()
