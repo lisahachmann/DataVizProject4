@@ -74,3 +74,35 @@ topDeathYear['2008'] = p2('2008')
 topDeathYear['2013'] = p2('2013')
 
 print topDeathYear
+
+
+"""
+Sex text: 3             (String)
+Age: 5                  (int)
+Marital_Status text: 12 (String)
+
+
+Marital Status
+S ... Never married, single
+M ... Married
+W ... Widowed
+D ... Divorced
+U ... Marital Status unknown
+"""
+
+SMA = {}
+def p3():
+    cur.execute("SELECT * FROM mortality")
+    for i in range(100000):
+        data = cur.fetchone()
+        
+        if str(data[3]) not in SMA:
+            SMA[str(data[3])] = [{str(data[12]): int(data[5])}]
+        else:
+            SMA[str(data[3])].append({str(data[12]): int(data[5])})
+        
+    with open('C:\Users\jmorris\Documents\Fall_2015\Data Visualization\HW4/SexMarriageAge.json', 'w') as outfile: #Julian's file path
+        json.dump(SMA, outfile, indent = 4)
+    return SMA
+
+#p3()
