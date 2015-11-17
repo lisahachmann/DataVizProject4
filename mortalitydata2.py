@@ -3,8 +3,10 @@
 
 import bottle
 import sqlite3
-
-conn = sqlite3.connect("mortality.db")
+import json
+from bottle import route, run, template
+@route('/mortality')
+conn = sqlite3.connect("/home/li/GitRepos/DataVizProject4/mortality.db")
 cur = conn.cursor()
 #cur.execute("SELECT cause_Recode_39 FROM mortality WHERE sex = 'F'")
 #cur.execute("SELECT * FROM sqlite_master WHERE name='mortality'")
@@ -74,3 +76,4 @@ topDeathYear['2008'] = p2('2008')
 topDeathYear['2013'] = p2('2013')
 
 print topDeathYear
+run(host='localhost', port=8081, debug=True)
