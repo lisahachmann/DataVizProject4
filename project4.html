@@ -33,11 +33,11 @@
       var Aheight = Asvg.attr("height");
       var Awidth = Asvg.attr("width");
 
-      var GLOBAL = {genderdata: [], maritaldata: [], causedata: []};//, ages: {}};
+      var GLOBAL = {dataset: []};
       window.addEventListener("load", run);
 
       function run () {
-          d3.json("/home/li/GitRepos/DataVizProject4/SexMarriageAge.json", function(data1) {
+          d3.json("YearSexMarriageAge.json", function(data1) {
               console.log(data1) //Log output to console
               GLOBAL.dataset = data1;
           });
