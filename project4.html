@@ -33,27 +33,64 @@
       var Aheight = Asvg.attr("height");
       var Awidth = Asvg.attr("width");
 
-      var GLOBAL = {dataset: []};
+      var GLOBAL = {dataset: [], single: [], married: [], widowed: [], divorced: [], unknown: []};
+      var fields = {year: ["2003","2008","2013"], Sex: ["M", "F"], 
+                Marriage: ["S", "M", "W", "D", "U"]}
       window.addEventListener("load", run);
 
       function run () {
-          d3.json("YearSexMarriageAge.json", function(data1) {
-              console.log(data1) //Log output to console
+          d3.json("YearSexMarriageAge.json", function(data1){
               GLOBAL.dataset = data1;
+              //console.log(data1["2003"]) //Log output to console
           });
-          draw();
+          
+          setTimeout(function () {
+            Marital();
+            draw();
+          }, 15000);
+          
+    }
+    //year, sex, marriage, age
+    function Marital(){
+        for(var i in fields.year){
+          for(var j in fields.Sex){
+
+            GLOBAL.single = GLOBAL.single.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["S"])
+
+            GLOBAL.married = GLOBAL.married.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["M"])
+
+            GLOBAL.widowed = GLOBAL.widowed.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["W"])
+
+            GLOBAL.divorced = GLOBAL.divorced.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["D"])
+
+            GLOBAL.unknown = GLOBAL.unknown.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["U"])
+          }
+        }
     }
 
     function draw(){
-        var data = [ 5, 10, 15, 20, 25 ];
+        var data = [ GLOBAL.single.length/30000, GLOBAL.married.length/30000,
+        GLOBAL.widowed.length/30000,GLOBAL.divorced.length/30000,GLOBAL.unknown.length/30000,];
+        console.log(data);
         var circles = Msvg.selectAll("circle")
         .data(data)
         .enter()
         .append("circle");
 
         circles.attr("cx", function(d, i) {
-        return (i * 50) + 25;})
-        .attr("cy", Mheight/2)
+        return (i * 120) + 40;})
+        .attr("cy", function(d, i) {
+          if(i%2===0){
+            return (Mheight/2)+100;
+          }
+          else{
+            return (Mheight/2)-100;
+          }})
         .attr("r", function(d) {
             return d;})
         .attr("fill", "yellow")
