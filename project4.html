@@ -21,6 +21,12 @@
     <h3 align= "center">Marital Status Distribution</h3>
     <div style="text-align:center;"> <svg class = "container" id = "age" height = "500" width = "700" style="border: 1px solid grey" </svg></div>
     <h3 align= "center">Age at Death Distribution</h3>
+      <div class ="btn-group" role="group">
+        <h3>Based on this characteristic?</h3>
+        <button type="button" class="btn btn-default btn1" id="year">2003</button>
+        <button type="button" class="btn btn-default btn2" id="year">2008</button>
+        <button type="button" class="btn btn-default btn3" id="year">2013</button>
+      </div>
 
     <script type="text/javascript">
       var Gsvg = d3.select("#gender");
@@ -34,24 +40,41 @@
       var Awidth = Asvg.attr("width");
 
       var GLOBAL = {dataset: [], single: [], married: [], widowed: [], divorced: [], unknown: []};
-      var fields = {year: ["2003","2008","2013"], Sex: ["M", "F"], 
+      var fields = {year: ["2003","2008","2013"], Sex: ["M", "F"],
                 Marriage: ["S", "M", "W", "D", "U"]}
       window.addEventListener("load", run);
 
       function run () {
           d3.json("YearSexMarriageAge.json", function(data1){
               GLOBAL.dataset = data1;
+              console.log("Json done")
               //console.log(data1["2003"]) //Log output to console
+              d3.selectAll("button.btn1").on("click", function(){
+                console.log("CLICKED 2003");
+                Marital();
+                draw();
+              });
+              d3.selectAll("button.btn2").on("click", function(){
+                console.log("CLICKED 2008");
+                Marital();
+                draw();
+              });
+              d3.selectAll("button.btn3").on("click", function(){
+                console.log("CLICKED 2013");
+                Marital();
+                draw();
+              });
           });
-          
-          setTimeout(function () {
-            Marital();
-            draw();
-          }, 15000);
-          
+
+        //   setTimeout(function () {
+        //     Marital();
+        //     draw();
+        //   }, 15000);
+
     }
     //year, sex, marriage, age
     function Marital(){
+        console.log("Marital")
         for(var i in fields.year){
           for(var j in fields.Sex){
 
@@ -74,6 +97,7 @@
     }
 
     function draw(){
+        console.log("draw")
         var data = [ GLOBAL.single.length/30000, GLOBAL.married.length/30000,
         GLOBAL.widowed.length/30000,GLOBAL.divorced.length/30000,GLOBAL.unknown.length/30000,];
         console.log(data);
@@ -129,7 +153,7 @@
         // .append('path')
         // .attr('d', line(array))
         //http://stackoverflow.com/questions/13570048/drawing-simple-lines-with-d3js
-        
+
     </script>
   </body>
 </html>
