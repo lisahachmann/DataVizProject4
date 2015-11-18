@@ -105,4 +105,42 @@ def p3():
         json.dump(SMA, outfile, indent = 4)
     return SMA
 
+   
 #p3()
+   
+YSMA = {}
+def p4():
+    cur.execute("SELECT year, Sex, Marital_Status, Age_Value FROM mortality")
+    i = 0
+    while True:
+        try:
+            data = cur.fetchone()
+            i+=1
+            
+            if i%500000 == 0:
+                print i
+            
+            if int(data[0]) not in YSMA.keys():
+                YSMA[int(data[0])] = {str(data[1]): {str(data[2]): [int(data[3])]}}
+                
+            
+            elif str(data[1]) not in YSMA[int(data[0])]:
+                YSMA[int(data[0])][str(data[1])] = {str(data[2]): [int(data[3])]}
+            
+            
+            elif str(data[2]) not in YSMA[int(data[0])][str(data[1])]:
+                YSMA[int(data[0])][str(data[1])][str(data[2])] = [int(data[3])]
+            
+            else:
+                YSMA[int(data[0])][str(data[1])][str(data[2])].append(int(data[3]))
+            
+                
+                
+        except:
+            break
+    with open('C:\Users\jmorris\Documents\Fall_2015\Data Visualization\HW4/YearSexMarriageAge.json', 'w') as outfile: #Julian's file path
+        json.dump(YSMA, outfile, indent = 4)
+    
+    return YSMA
+
+p4()
