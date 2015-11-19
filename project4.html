@@ -88,8 +88,8 @@
             GLOBAL.female = GLOBAL.female.concat(
               GLOBAL.dataset[fields.year[i]]["F"][fields.Marriage[j]]);
           }
-        }
-
+}
+}
 
     //year, sex, marriage, age
     function Marital(){
@@ -198,7 +198,7 @@
         console.log("draw")
         barPadding = Gwidth/20;
         var data = [ GLOBAL.single.length/30000, GLOBAL.married.length/30000,
-        GLOBAL.widowed.length/30000,GLOBAL.divorced.length/30000,GLOBAL.unknown.length/30000,];
+        GLOBAL.widowed.length/30000,GLOBAL.divorced.length/30000,GLOBAL.unknown.length/30000];
         console.log(data);
         var circles = Msvg.selectAll("circle")
         .data(data)
