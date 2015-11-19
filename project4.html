@@ -44,31 +44,35 @@
       var Aheight = Asvg.attr("height");
       var Awidth = Asvg.attr("width");
 
-      var GLOBAL = {dataset: [], single: [], married: [], widowed: [], divorced: [], unknown: [], male :[], female: []};
+      var GLOBAL = {dataset: [], single: [], married: [], widowed: [], divorced: [], unknown: [], male :[], female: [], age0_9: [], age10_19: [], age20_29: [], age30_39: [], age40_49: [], age50_59: [], age60_69: [], age70_79: [], age80_89: [], age90_99: [], over100: []};
       var fields = {year: ["2003","2008","2013"], Sex: ["M", "F"],
                 Marriage: ["S", "M", "W", "D", "U"]}
       window.addEventListener("load", run);
 
       function run () {
-          d3.json("YearSexMarriageAge.json", function(data1){
+          d3.json("../YearSexMarriageAge.json", function(data1){
               GLOBAL.dataset = data1;
               console.log("Json done")
               d3.selectAll("button.btn1").on("click", function(){
                 console.log("CLICKED year");
                 Marital();
                 Gender();
+                Age();
                 draw();
               });
               d3.selectAll("button.btn2").on("click", function(){
                 console.log("CLICKED year");
                 Marital();
                 Gender();
+                Age();
+                console.log(GLOBAL);
                 draw();
               });
               d3.selectAll("button.btn3").on("click", function(){
                 console.log("CLICKED year");
                 Marital();
                 Gender();
+                Age();
                 draw();
               });
           });
@@ -76,15 +80,14 @@
     }
 
     function Gender(){
-            for (var i in fields.year){
-              for (var j in fields.Marriage){
-                GLOBAL.male = GLOBAL.male.concat(
-                  GLOBAL.dataset[fields.year[i]]["M"][fields.Marriage[j]]);
-                GLOBAL.female = GLOBAL.female.concat(
-                  GLOBAL.dataset[fields.year[i]]["F"][fields.Marriage[j]]);
-              }
-            }
-        console.log(GLOBAL.male.length)
+        console.log("GENDER")
+        for (var i in fields.year){
+          for (var j in fields.Marriage){
+            GLOBAL.male = GLOBAL.male.concat(
+              GLOBAL.dataset[fields.year[i]]["M"][fields.Marriage[j]]);
+            GLOBAL.female = GLOBAL.female.concat(
+              GLOBAL.dataset[fields.year[i]]["F"][fields.Marriage[j]]);
+          }
         }
 
 
@@ -110,6 +113,85 @@
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["U"])
           }
         }
+    }
+
+    //Sorry for this messy array of functions...
+    function filterAge0(age){
+      return age >= 0 && age < 10;
+    }
+    function filterAge10(age){
+      return age >= 10 && age < 20;
+    }
+    function filterAge20(age){
+      return age >= 20 && age < 30;
+    }
+    function filterAge30(age){
+      return age >= 30 && age < 40;
+    }
+    function filterAge40(age){
+      return age >= 40 && age < 50;
+    }
+    function filterAge50(age){
+      return age >= 50 && age < 60;
+    }
+    function filterAge60(age){
+      return age >= 60 && age < 70;
+    }
+    function filterAge70(age){
+      return age >= 70 && age < 80;
+    }
+    function filterAge80(age){
+      return age >= 80 && age < 90;
+    }
+    function filterAge90(age){
+      return age >= 90 && age < 100;
+    }
+    function filterAge100(age){
+      return age >= 100;
+    }
+
+    //I couldn't think of a better way...
+    function Age(){
+      for(var i in fields.year){
+        for(var j in fields.Sex){
+          for(var k in fields.Marriage){
+            GLOBAL.age0_9 = GLOBAL.age0_9.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge0));
+            GLOBAL.age10_19 = GLOBAL.age10_19.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge10));
+            GLOBAL.age20_29 = GLOBAL.age20_29.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge20));
+            GLOBAL.age30_39 = GLOBAL.age30_39.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge30));
+            GLOBAL.age40_49 = GLOBAL.age40_49.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge40));
+            GLOBAL.age50_59 = GLOBAL.age50_59.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge50));
+            GLOBAL.age60_69 = GLOBAL.age60_69.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge60));
+            GLOBAL.age70_79 = GLOBAL.age70_79.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge70));
+            GLOBAL.age80_89 = GLOBAL.age80_89.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge80));
+            GLOBAL.age90_99 = GLOBAL.age90_99.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge90));
+            GLOBAL.over100 = GLOBAL.over100.concat(
+              GLOBAL.dataset[fields.year[i]][fields.Sex[j]][fields.Marriage[k]].filter(
+                filterAge100));
+          }
+        }
+      }
+
     }
 
     function draw(){
