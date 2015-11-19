@@ -15,23 +15,24 @@
 <body>
   <body>
     <h1 align="center">Mortality Statistics</h1>
+    <div class ="btn-group" role="group">
+      <h3>Based on this year?</h3>
+      <button type="button" class="btn btn-default btn1" id="year">2003</button>
+      <button type="button" class="btn btn-default btn2" id="year">2008</button>
+      <button type="button" class="btn btn-default btn3" id="year">2013</button>
+    </div>
     <div style="text-align:center;"><svg  class = "container" id = "gender" height = "500" width = "700" style="border: 1px solid grey" style="float: left"</svg></div>
     <h3 align= "center">Gender Distribution</h3>
     <div style="text-align:center;"><svg class = "container" id = "marital" height = "500" width = "700" style="border: 1px solid grey"</svg></div>
     <h3 align= "center">Marital Status Distribution</h3>
     <div style="text-align:center;"> <svg class = "container" id = "age" height = "500" width = "700" style="border: 1px solid grey" </svg></div>
     <h3 align= "center">Age at Death Distribution</h3>
-      <div class ="btn-group" role="group">
-        <h3>Based on this characteristic?</h3>
-        <button type="button" class="btn btn-default btn1" id="year">2003</button>
-        <button type="button" class="btn btn-default btn2" id="year">2008</button>
-        <button type="button" class="btn btn-default btn3" id="year">2013</button>
-      </div>
+
 
     <script type="text/javascript">
       var Gsvg = d3.select("#gender");
       var Gheight = Gsvg.attr("height");
-      var gGidth = Gsvg.attr("width");
+      var Gwidth = Gsvg.attr("width");
       var Msvg = d3.select("#marital");
       var Mheight = Msvg.attr("height");
       var Mwidth = Msvg.attr("width");
@@ -39,7 +40,7 @@
       var Aheight = Asvg.attr("height");
       var Awidth = Asvg.attr("width");
 
-      var GLOBAL = {dataset: [], single: [], married: [], widowed: [], divorced: [], unknown: []};
+      var GLOBAL = {dataset: [], single: [], married: [], widowed: [], divorced: [], unknown: [], male :[], female: []};
       var fields = {year: ["2003","2008","2013"], Sex: ["M", "F"],
                 Marriage: ["S", "M", "W", "D", "U"]}
       window.addEventListener("load", run);
@@ -50,28 +51,35 @@
               console.log("Json done")
               //console.log(data1["2003"]) //Log output to console
               d3.selectAll("button.btn1").on("click", function(){
-                console.log("CLICKED 2003");
+                console.log("CLICKED year");
                 Marital();
+                Gender();
                 draw();
               });
               d3.selectAll("button.btn2").on("click", function(){
-                console.log("CLICKED 2008");
+                console.log("CLICKED year");
                 Marital();
+                Gender();
                 draw();
               });
               d3.selectAll("button.btn3").on("click", function(){
-                console.log("CLICKED 2013");
+                console.log("CLICKED year");
                 Marital();
+                Gender();
                 draw();
               });
           });
 
-        //   setTimeout(function () {
-        //     Marital();
-        //     draw();
-        //   }, 15000);
-
     }
+
+    function Gender(){
+        console.log("GENDERR")
+        for (var i in fields.year){
+            GLOBAL.male = GLOBAL.male.concat(GLOBAL.dataset[fields.year[i][0]]);
+            GLOBAL.female = GLOBAL.female.concat(GLOBAL.dataset[fields.year[i][1]]);
+        }
+    }
+
     //year, sex, marriage, age
     function Marital(){
         console.log("Marital")
@@ -122,12 +130,13 @@
         .attr("stroke-width", function(d) {
             return d/2;});
 
-        var data1 = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+        var data1 = [ GLOBAL.male.length, GLOBAL.female.length ];
+        console.log(data1)
         var bars = Gsvg.selectAll("rect")
         .data(data1)
         .enter()
         .append("rect")
-        .attr("x", 0)
+        .attr("x", function(d,i){return (Gheight/3)*(i+1)} )
         .attr("y", 0)
         .attr("width", 20)
         .attr("height", 100);
