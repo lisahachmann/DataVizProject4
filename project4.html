@@ -6,7 +6,6 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
     <style>
-
     .container {
       float: left;
     }
@@ -33,18 +32,18 @@
       var Gsvg = d3.select("#gender");
       var Gheight = Gsvg.attr("height");
       var Gwidth = Gsvg.attr("width");
+      var gGroup = Gsvg.append("g");
       var Msvg = d3.select("#marital");
       var Mheight = Msvg.attr("height");
       var Mwidth = Msvg.attr("width");
+      var mGroup = Msvg.append("g");
       var Asvg = d3.select("#age");
       var Aheight = Asvg.attr("height");
       var Awidth = Asvg.attr("width");
-
       var GLOBAL = {dataset: [], single: [], married: [], widowed: [], divorced: [], unknown: [], male :[], female: [], age0_9: [], age10_19: [], age20_29: [], age30_39: [], age40_49: [], age50_59: [], age60_69: [], age70_79: [], age80_89: [], age90_99: [], over100: []};
       var fields = {year: ["2003","2008","2013"], Sex: ["M", "F"],
                 Marriage: ["S", "M", "W", "D", "U"]}
       window.addEventListener("load", run);
-
       function run () {
           d3.json("../YearSexMarriageAge.json", function(data1){
               GLOBAL.dataset = data1;
@@ -55,7 +54,9 @@
                 Marital();
                 Gender();
                 Age();
-                draw();
+                Genderdraw();
+                Maritaldraw();
+                Agedraw();
               });
               d3.selectAll("button.btn2").on("click", function(){
                 console.log("CLICKED year");
@@ -63,19 +64,21 @@
                 Gender();
                 Age();
                 console.log(GLOBAL);
-                draw();
+                Genderdraw();
+                Maritaldraw();
+                Agedraw();
               });
               d3.selectAll("button.btn3").on("click", function(){
                 console.log("CLICKED year");
                 Marital();
                 Gender();
                 Age();
-                draw();
+                Genderdraw();
+                Maritaldraw();
+                Agedraw();
               });
           });
-
     }
-
     function Gender(){
         console.log("GENDER")
         for (var i in fields.year){
@@ -87,31 +90,24 @@
           }
         }
     }
-
     //year, sex, marriage, age
     function Marital(){
         console.log("Marital")
         for(var i in fields.year){
           for(var j in fields.Sex){
-
             GLOBAL.single = GLOBAL.single.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["S"])
-
             GLOBAL.married = GLOBAL.married.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["M"])
-
             GLOBAL.widowed = GLOBAL.widowed.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["W"])
-
             GLOBAL.divorced = GLOBAL.divorced.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["D"])
-
             GLOBAL.unknown = GLOBAL.unknown.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["U"])
           }
         }
     }
-
     //Sorry for this messy array of functions...
     function filterAge0(age){
       return age >= 0 && age < 10;
@@ -146,7 +142,6 @@
     function filterAge100(age){
       return age >= 100;
     }
-
     //I couldn't think of a better way...
     function Age(){
       for(var i in fields.year){
@@ -188,19 +183,16 @@
           }
         }
       }
-
     }
-
-    function draw(){
+    function Maritaldraw(){
         console.log("draw")
         var data = [ GLOBAL.single.length/30000, GLOBAL.married.length/30000,
-        GLOBAL.widowed.length/30000,GLOBAL.divorced.length/30000,GLOBAL.unknown.length/30000,];
+        GLOBAL.widowed.length/30000,GLOBAL.divorced.length/30000,GLOBAL.unknown.length/30000];
         console.log(data);
         var circles = Msvg.selectAll("circle")
         .data(data)
         .enter()
         .append("circle");
-
         circles.attr("cx", function(d, i) {
         return (i * 120) + 40;})
         .attr("cy", function(d, i) {
@@ -216,7 +208,8 @@
         .attr("stroke", "orange")
         .attr("stroke-width", function(d) {
             return d/2;});
-
+}
+function Genderdraw(){
         var data1 = [ GLOBAL.male.length, GLOBAL.female.length ];
         console.log(data1)
         var bars = Gsvg.selectAll("rect")
@@ -224,74 +217,79 @@
         .enter()
         .append("rect")
         .attr("x", function(d,i){return (Gheight/3)*(i+1)} )
-        .attr("y", 0)
-        .attr("width", 20)
-        .attr("height", 100);
-        }
+        .attr("y", 240)
+        .attr("width", Gheight -350)
+        .attr("height", function(d){return (d/30000)*2});
+         var g = gGroup.selectAll("text")
+        .data(data1)
+        .enter()
+        .append("g");
+        g.append("text")
+        .attr("x",function(d,i){return (Gheight/3)*(i+1) + 25})
+        .attr("y", 50)
+        .text(function(d){return d})
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .attr("fill", "red");
+        g.append("text")
+        .attr("x", Gheight/3 +30)
+        .attr("y", 225)
+        .text("Female")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .attr("fill", "red");
+        g.append("text")
+        .attr("x", ((2*Gheight)/3 + 45))
+        .attr("y", 225)
+        .text("Male")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .attr("fill", "red");
+    }
+    function Agedraw(){
+        var data = [{label: "age0_9", count: GLOBAL.age0_9.length}, 
+        {label: "age10_19", count: GLOBAL.age10_19.length}, 
+        {label: "age20_29", count: GLOBAL.age20_29.length}, 
+        {label: "age30_39", count: GLOBAL.age30_39.length}, 
+        {label: "age40_49", count: GLOBAL.age40_49.length}, 
+        {label: "age50_59", count: GLOBAL.age50_59.length}, 
+        {label: "age60_69", count: GLOBAL.age60_69.length}, 
+        {label: "age70_79", count: GLOBAL.age70_79.length}, 
+        {label: "age80_89", count: GLOBAL.age80_89.length}, 
+        {label: "age90_99", count: GLOBAL.age90_99.length}, 
+        {label: "over100", count: GLOBAL.over100.length}]
 
-
-        // data2 = [1,2,3,4,5];
-        // data3 = [1,2,3,4,5];
-        // var x = d3.time.scale().range([0, Awidth]);
-        // var y = d3.scale.linear().range([Aheight, 0]);
-        // var line = d3.svg.line()
-        // .x(function(d) { return x(d.data2); })
-        // .y(function(d) { return y(d.data3); });
-        // var lines = Asvg.append("line")
-        //                  .attr(x)
-        //                  .attr(y);
-        //
-        // var array = [1,2,3,4,5,6]
-        // var line = d3.svg.line()
-        //     .x(function(d) { return Math.random() * 1000 })
-        //     .y(function(d) { return Math.random() * 1000});
-        //
-        // <!-- Adding to the svg -->
-        // .append('path')
-        // .attr('d', line(array))
-        //http://stackoverflow.com/questions/13570048/drawing-simple-lines-with-d3js
-
-        var data = [ GLOBAL.age0_9.length/30000, GLOBAL.age10_19.length/30000,
-        GLOBAL.age20_29.length/30000,GLOBAL.age30_39.length/30000,GLOBAL.age40_49.length/30000,GLOBAL.age50_59.length/30000,GLOBAL.age60_69.length/30000,GLOBAL.age70_79.length/30000,GLOBAL.age80_89.length/30000,GLOBAL.age90_99.length/30000,
-        GLOBAL.over100.length/30000];
-
-
-        var width = 800,
-        height = 250,
+            
+        var width = Awidth,
+        height = Aheight,
         radius = Math.min(width, height) / 2;
-
         var color = d3.scale.ordinal()
             .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
         var arc = d3.svg.arc()
             .outerRadius(radius - 10)
             .innerRadius(radius - 70);
-
         var pie = d3.layout.pie()
             .sort(null)
             .value(function (d) {
-            return d;
+            return d.count;
         });
-
-
-
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select("#age")
             .attr("width", width)
             .attr("height", height)
+            .attr("x", width/2)
+            .attr("y", height/2)
             .append("g")
             .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-            var g = Asvg.selectAll(".arc")
+            var g = svg.selectAll(".arc")
                 .data(pie(data))
                 .enter().append("g")
                 .attr("class", "arc");
-
             g.append("path")
                 .attr("d", arc)
                 .style("fill", function (d) {
                 return color(d);
             });
-
             g.append("text")
                 .attr("transform", function (d) {
                 return "translate(" + arc.centroid(d) + ")";
@@ -299,9 +297,9 @@
                 .attr("dy", ".35em")
                 .style("text-anchor", "middle")
                 .text(function (d) {
-                return d;
+                return d.data.label;
             });
-
+}
     </script>
   </body>
 </html>
