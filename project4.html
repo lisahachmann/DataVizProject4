@@ -6,7 +6,6 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
     <style>
-
     .container {
       float: left;
     }
@@ -42,12 +41,10 @@
       var Asvg = d3.select("#age");
       var Aheight = Asvg.attr("height");
       var Awidth = Asvg.attr("width");
-
       var GLOBAL = {dataset: [], single: [], married: [], widowed: [], divorced: [], unknown: [], male :[], female: [], age0_9: [], age10_19: [], age20_29: [], age30_39: [], age40_49: [], age50_59: [], age60_69: [], age70_79: [], age80_89: [], age90_99: [], over100: []};
       var fields = {year: ["2003","2008","2013"], Sex: ["M", "F"],
                 Marriage: ["S", "M", "W", "D", "U"]}
       window.addEventListener("load", run);
-
       function run () {
           d3.json("../YearSexMarriageAge.json", function(data1){
               GLOBAL.dataset = data1;
@@ -82,9 +79,7 @@
                 Agedraw();
               });
           });
-
     }
-
     function Gender(){
         console.log("GENDER")
         for (var i in fields.year){
@@ -96,31 +91,24 @@
           }
         }
     }
-
     //year, sex, marriage, age
     function Marital(){
         console.log("Marital")
         for(var i in fields.year){
           for(var j in fields.Sex){
-
             GLOBAL.single = GLOBAL.single.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["S"])
-
             GLOBAL.married = GLOBAL.married.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["M"])
-
             GLOBAL.widowed = GLOBAL.widowed.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["W"])
-
             GLOBAL.divorced = GLOBAL.divorced.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["D"])
-
             GLOBAL.unknown = GLOBAL.unknown.concat(
               GLOBAL.dataset[fields.year[i]][fields.Sex[j]]["U"])
           }
         }
     }
-
     //Sorry for this messy array of functions...
     function filterAge0(age){
       return age >= 0 && age < 10;
@@ -155,7 +143,6 @@
     function filterAge100(age){
       return age >= 100;
     }
-
     //I couldn't think of a better way...
     function Age(){
       for(var i in fields.year){
@@ -197,7 +184,6 @@
           }
         }
       }
-
     }
 
     function Maritaldraw(){
@@ -209,7 +195,6 @@
         .data(data)
         .enter()
         .append("circle");
-
         circles.attr("cx", function(d, i) {
         return (i * 120) + 40;})
         .attr("cy", function(d, i) {
@@ -312,45 +297,52 @@ function Genderdraw(){
     }
 
     function Agedraw(){
-        var data = [ GLOBAL.age0_9.length/30000, GLOBAL.age10_19.length/30000,
-        GLOBAL.age20_29.length/30000,GLOBAL.age30_39.length/30000,GLOBAL.age40_49.length/30000,GLOBAL.age50_59.length/30000,GLOBAL.age60_69.length/30000,GLOBAL.age70_79.length/30000,GLOBAL.age80_89.length/30000,GLOBAL.age90_99.length/30000,
-        GLOBAL.over100.length/30000];
+        var data = [{label: "age0_9", count: GLOBAL.age0_9.length}, 
+        {label: "age10_19", count: GLOBAL.age10_19.length}, 
+        {label: "age20_29", count: GLOBAL.age20_29.length}, 
+        {label: "age30_39", count: GLOBAL.age30_39.length}, 
+        {label: "age40_49", count: GLOBAL.age40_49.length}, 
+        {label: "age50_59", count: GLOBAL.age50_59.length}, 
+        {label: "age60_69", count: GLOBAL.age60_69.length}, 
+        {label: "age70_79", count: GLOBAL.age70_79.length}, 
+        {label: "age80_89", count: GLOBAL.age80_89.length}, 
+        {label: "age90_99", count: GLOBAL.age90_99.length}, 
+        {label: "over100", count: GLOBAL.over100.length}]
 
+            
+        var width = Awidth,
+        height = Aheight,
 
-        var width = 800,
-        height = 250,
         radius = Math.min(width, height) / 2;
-
         var color = d3.scale.ordinal()
             .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-
         var arc = d3.svg.arc()
             .outerRadius(radius - 10)
             .innerRadius(radius - 70);
-
         var pie = d3.layout.pie()
             .sort(null)
             .value(function (d) {
-            return d;
+            return d.count;
         });
 
-        var svg = d3.select("body").append("svg")
+        var svg = d3.select("#age")
+
             .attr("width", width)
             .attr("height", height)
+            .attr("x", width/2)
+            .attr("y", height/2)
             .append("g")
             .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-            var g = Asvg.selectAll(".arc")
+            var g = svg.selectAll(".arc")
                 .data(pie(data))
                 .enter().append("g")
                 .attr("class", "arc");
-
             g.append("path")
                 .attr("d", arc)
                 .style("fill", function (d) {
                 return color(d);
             });
-
             g.append("text")
                 .attr("transform", function (d) {
                 return "translate(" + arc.centroid(d) + ")";
@@ -358,7 +350,7 @@ function Genderdraw(){
                 .attr("dy", ".35em")
                 .style("text-anchor", "middle")
                 .text(function (d) {
-                return d;
+                return d.data.label;
             });
 }
     </script>
