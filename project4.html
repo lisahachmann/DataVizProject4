@@ -221,10 +221,52 @@
           }})
         .attr("r", function(d) {
             return d;})
-        .attr("fill", "yellow")
-        .attr("stroke", "orange")
-        .attr("stroke-width", function(d) {
-            return d/2;});
+        .attr("fill", "teal");
+
+        var g = mGroup.selectAll("text")
+           .data(data)
+           .enter()
+           .append("g");
+
+           g.append("text")
+           .attr("x", 5)
+           .attr("y", 315)
+           .text("Single: "+ GLOBAL.single.length)
+           .attr("font-family", "sans-serif")
+           .attr("font-size", "20px")
+           .attr("fill", "red");
+
+           g.append("text")
+           .attr("x", 50)
+           .attr("y", 42)
+           .text("Married: "+ GLOBAL.married.length)
+           .attr("font-family", "sans-serif")
+           .attr("font-size", "20px")
+           .attr("fill", "red");
+
+           g.append("text")
+           .attr("x", 200)
+           .attr("y", 258)
+           .text("Divorced: "+ GLOBAL.divorced.length)
+           .attr("font-family", "sans-serif")
+           .attr("font-size", "20px")
+           .attr("fill", "red");
+
+           g.append("text")
+           .attr("x", 300)
+           .attr("y", 100)
+           .text("Widowed: "+ GLOBAL.widowed.length)
+           .attr("font-family", "sans-serif")
+           .attr("font-size", "20px")
+           .attr("fill", "red");
+
+           g.append("text")
+           .attr("x", 450)
+           .attr("y", 325)
+           .text("Unknown: "+ GLOBAL.unknown.length)
+           .attr("font-family", "sans-serif")
+           .attr("font-size", "20px")
+           .attr("fill", "red");
 }
 function Genderdraw(){
         var data1 = [ GLOBAL.male.length, GLOBAL.female.length ];
